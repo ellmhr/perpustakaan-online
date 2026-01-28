@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Cover Buku - Bookridge</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="dashboard.html" class="navbar-brand">
+        <i class="fas fa-book-open" style="font-size: 1.5rem; color: var(--primary);"></i>
+        <h2>Bookridge</h2>
+      </a>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="search.html">Cari Buku</a></li>
+        <li><a href="upload-cover.html" class="active">Upload Cover</a></li>
+        <li><a href="#" onclick="logout()" style="color: var(--danger);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    
+    <h1 style="color: var(--text-dark); margin-bottom: 1.5rem;">
+      <i class="fas fa-upload"></i> Upload Cover Buku
+    </h1>
+
+    <div style="max-width: 800px; margin: 0 auto;">
+      
+      <!-- Instructions -->
+      <div class="card" style="background: var(--bg-light); margin-bottom: 2rem;">
+        <h3 style="color: var(--text-dark); margin-bottom: 1rem;">
+          <i class="fas fa-info-circle"></i> Cara Upload Cover Buku
+        </h3>
+        <ol style="color: var(--text-medium); line-height: 1.8; padding-left: 1.5rem;">
+          <li>Pilih buku dari daftar di bawah</li>
+          <li>Klik tombol "Choose File" untuk memilih gambar cover</li>
+          <li>Format yang didukung: JPG, PNG, GIF, WEBP (maksimal 5MB)</li>
+          <li>Klik "Upload" untuk mengunggah cover</li>
+          <li>Cover akan langsung tampil di website</li>
+        </ol>
+      </div>
+
+      <!-- Book List -->
+      <div class="card">
+        <h3 style="color: var(--text-dark); margin-bottom: 1rem;">
+          Daftar Buku
+        </h3>
+
+        <!-- Alert -->
+        <div id="uploadAlert" class="hidden"></div>
+
+        <!-- Books -->
+        <div id="booksContainer">
+          <div class="loader">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    // Check authentication
+    if (!isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    // Show alert
+    function showAlert(message, type = 'success') {
+      const alertDiv = document.getElementById('uploadAlert');
+      alertDiv.className = type === 'success' ? 'alert alert-success' : 'alert alert-error';
+      alertDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        ${message}
+      `;
+      alertDiv.classList.remove('hidden');
+      
+      setTimeout(() => {
+        alertDiv.classList.add('hidden');
+      }, 5000);
+    }
+
+    // Load books
+    async function loadBooks() {
+      const container = document.getElementById('booksContainer');
+      
+      try {
+        const response = await fetch(BOOK_ENDPOINTS.ALL, {
+          headers: getAuthHeaders()
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          displayBooks(data.data);
+        }
+      } catch (error) {
+        console.error('Error loading books:', error);
+        container.innerHTML = '<div class="alert alert-error">Gagal memuat buku</div>';
+      }
+    }
+
+    // Display books
+    function displayBooks(books) {
+      const container = document.getElementById('booksContainer');
+      
+      container.innerHTML = books.map(book => `
+        <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            
+            <!-- Current Cover Preview -->
+            <div style="width: 80px; height: 120px; background: linear-gradient(135deg, var(--primary-light), var(--primary)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; overflow: hidden; flex-shrink: 0;">
+              ${book.cover_image ? 
+                `<img src="${getBookCoverUrl(book.cover_image)}" alt="${book.judul}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-book\\'></i>'">` 
+                : 
+                '<i class="fas fa-book"></i>'
+              }
+            </div>
+
+            <!-- Book Info -->
+            <div style="flex: 1;">
+              <h4 style="color: var(--text-dark); margin-bottom: 0.25rem;">${book.judul}</h4>
+              <p style="color: var(--text-medium); font-size: 0.9rem; margin-bottom: 0.5rem;">${book.penulis}</p>
+              <span class="badge badge-info" style="font-size: 0.8rem;">ID: ${book.id_buku}</span>
+              ${book.cover_image ? `<span class="badge badge-success" style="font-size: 0.8rem; margin-left: 0.5rem;">✓ Cover tersedia</span>` : ''}
+            </div>
+
+            <!-- Upload Form -->
+            <div>
+              <form onsubmit="uploadCover(event, ${book.id_buku})" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <input type="file" id="file-${book.id_buku}" accept="image/*" required style="font-size: 0.85rem;">
+                <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">
+                  <i class="fas fa-upload"></i> Upload
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Upload cover
+    async function uploadCover(event, bookId) {
+      event.preventDefault();
+      
+      const fileInput = document.getElementById(`file-${bookId}`);
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        showAlert('Pilih file terlebih dahulu', 'error');
+        return;
+      }
+
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showAlert('Ukuran file terlalu besar (maksimal 5MB)', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('cover', file);
+
+      try {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/books/${bookId}/upload-cover`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${getAuthToken()}`
+          },
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showAlert(`Cover buku berhasil diupload!`, 'success');
+          loadBooks(); // Reload to show new cover
+        } else {
+          showAlert(data.message || 'Upload gagal', 'error');
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        showAlert('Tidak dapat terhubung ke server', 'error');
+      }
+    }
+
+    // Initialize
+    loadBooks();
+  </script>
+
+</body>
+</html>

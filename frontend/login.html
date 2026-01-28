@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Bookridge</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: linear-gradient(135deg, #1DD1A1 0%, #10AC84 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+  
+  <div class="container">
+    <div style="max-width: 480px; margin: 0 auto;">
+      
+      <!-- Logo & Title -->
+      <div style="text-align: center; margin-bottom: 2rem; color: white;">
+        <i class="fas fa-book-open" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Bookridge</h1>
+        <p style="opacity: 0.9;">Selamat datang kembali!</p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="card" style="padding: 2rem;">
+        
+        <!-- Alert -->
+        <div id="alert" class="hidden"></div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+          
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-envelope"></i> Email
+            </label>
+            <input 
+              type="email" 
+              class="form-input" 
+              id="email" 
+              placeholder="nama@email.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-lock"></i> Password
+            </label>
+            <input 
+              type="password" 
+              class="form-input" 
+              id="password" 
+              placeholder="Masukkan password"
+              required
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+
+        </form>
+
+        <!-- Register Link -->
+        <div style="text-align: center; margin-top: 1.5rem; color: var(--text-medium);">
+          Belum punya akun? 
+          <a href="register.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">
+            Daftar di sini
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Demo Account Info -->
+      <div style="margin-top: 1.5rem; text-align: center; color: white; opacity: 0.9;">
+        <p style="font-size: 0.9rem;">
+          <i class="fas fa-info-circle"></i> 
+          Belum punya akun? Silakan daftar terlebih dahulu
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  
+</body>
+</html>

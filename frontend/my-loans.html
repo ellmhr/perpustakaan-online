@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peminjaman Saya - Bookridge</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="dashboard.html" class="navbar-brand">
+        <i class="fas fa-book-open" style="font-size: 1.5rem; color: var(--primary);"></i>
+        <h2>Bookridge</h2>
+      </a>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="search.html">Cari Buku</a></li>
+        <li><a href="my-loans.html" class="active">Peminjaman</a></li>
+        <li><a href="history.html">Riwayat</a></li>
+        <li><a href="profile.html">Profil</a></li>
+        <li><a href="#" onclick="logout()" style="color: var(--danger);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    
+    <h1 style="color: var(--text-dark); margin-bottom: 1.5rem;">
+      <i class="fas fa-book-reader"></i> Peminjaman Aktif
+    </h1>
+
+    <!-- Loans Container -->
+    <div id="loansContainer">
+      <!-- Loading -->
+      <div class="loader">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-container">
+      <a href="dashboard.html" class="bottom-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Beranda</span>
+      </a>
+      <a href="search.html" class="bottom-nav-item">
+        <i class="fas fa-search"></i>
+        <span>Cari</span>
+      </a>
+      <a href="my-loans.html" class="bottom-nav-item active">
+        <i class="fas fa-book"></i>
+        <span>Pinjaman</span>
+      </a>
+      <a href="profile.html" class="bottom-nav-item">
+        <i class="fas fa-user"></i>
+        <span>Akun</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/loans.js"></script>
+
+</body>
+</html>

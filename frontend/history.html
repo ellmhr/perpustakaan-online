@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat - Bookridge</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="dashboard.html" class="navbar-brand">
+        <i class="fas fa-book-open" style="font-size: 1.5rem; color: var(--primary);"></i>
+        <h2>Bookridge</h2>
+      </a>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="search.html">Cari Buku</a></li>
+        <li><a href="my-loans.html">Peminjaman</a></li>
+        <li><a href="history.html" class="active">Riwayat</a></li>
+        <li><a href="profile.html">Profil</a></li>
+        <li><a href="#" onclick="logout()" style="color: var(--danger);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    
+    <h1 style="color: var(--text-dark); margin-bottom: 1.5rem;">
+      <i class="fas fa-history"></i> Riwayat Peminjaman
+    </h1>
+
+    <!-- History Container -->
+    <div id="historyContainer">
+      <!-- Loading -->
+      <div class="loader">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-container">
+      <a href="dashboard.html" class="bottom-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Beranda</span>
+      </a>
+      <a href="search.html" class="bottom-nav-item">
+        <i class="fas fa-search"></i>
+        <span>Cari</span>
+      </a>
+      <a href="my-loans.html" class="bottom-nav-item">
+        <i class="fas fa-book"></i>
+        <span>Pinjaman</span>
+      </a>
+      <a href="profile.html" class="bottom-nav-item">
+        <i class="fas fa-user"></i>
+        <span>Akun</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    // Check authentication
+    if (!isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('id-ID', options);
+    }
+
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    }
+
+    // Load history
+    async function loadHistory() {
+      const container = document.getElementById('historyContainer');
+      
+      try {
+        const response = await fetch(LOAN_ENDPOINTS.HISTORY, {
+          headers: getAuthHeaders()
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          displayHistory(data.data);
+        } else {
+          container.innerHTML = `
+            <div class="alert alert-error">
+              Gagal memuat riwayat
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading history:', error);
+        container.innerHTML = `
+          <div class="alert alert-error">
+            Tidak dapat terhubung ke server
+          </div>
+        `;
+      }
+    }
+
+    // Display history
+    function displayHistory(loans) {
+      const container = document.getElementById('historyContainer');
+      
+      if (loans.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-history"></i>
+            <h3>Belum ada riwayat</h3>
+            <p>Anda belum pernah mengembalikan buku</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = loans.map(loan => `
+        <div class="card" style="margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+            
+            <div style="flex: 1;">
+              <h3 style="color: var(--text-dark); margin-bottom: 0.5rem;">${loan.judul}</h3>
+              <p style="color: var(--text-medium); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                <i class="fas fa-user"></i> ${loan.penulis}
+              </p>
+              
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem; margin-top: 1rem; font-size: 0.85rem;">
+                <div>
+                  <span style="color: var(--text-medium);">Dipinjam:</span><br>
+                  <strong>${formatDate(loan.tanggal_pinjam)}</strong>
+                </div>
+                <div>
+                  <span style="color: var(--text-medium);">Dikembalikan:</span><br>
+                  <strong>${formatDate(loan.tanggal_kembali)}</strong>
+                </div>
+                ${loan.total_denda ? `
+                  <div>
+                    <span style="color: var(--text-medium);">Denda:</span><br>
+                    <strong style="color: var(--danger);">${formatCurrency(loan.total_denda)}</strong>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <div>
+              <span class="badge ${loan.status === 'dikembalikan' ? 'badge-success' : 'badge-danger'}">
+                ${loan.status === 'dikembalikan' ? 'Selesai' : 'Terlambat'}
+              </span>
+              ${loan.status_bayar ? `
+                <span class="badge ${loan.status_bayar === 'sudah_bayar' ? 'badge-success' : 'badge-warning'}" style="display: block; margin-top: 0.5rem;">
+                  ${loan.status_bayar === 'sudah_bayar' ? 'Denda Lunas' : 'Belum Bayar'}
+                </span>
+              ` : ''}
+            </div>
+
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize
+    loadHistory();
+  </script>
+
+</body>
+</html>

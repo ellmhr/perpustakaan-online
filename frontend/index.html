@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perpustakaan Online - Bookridge</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Hero Section -->
+  <div style="background: linear-gradient(135deg, #1DD1A1 0%, #10AC84 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; color: white;">
+    <div class="container" style="text-align: center;">
+      <!-- Logo -->
+      <div style="margin-bottom: 2rem;">
+        <i class="fas fa-book-open" style="font-size: 5rem; margin-bottom: 1rem;"></i>
+        <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">Bookridge</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">Perpustakaan Online</p>
+      </div>
+
+      <!-- Description -->
+      <div style="max-width: 600px; margin: 0 auto 3rem;">
+        <p style="font-size: 1.1rem; line-height: 1.8; opacity: 0.95;">
+          Pinjam buku favorit Anda secara online. Mudah, cepat, dan praktis.
+          Akses ribuan koleksi buku kapan saja, di mana saja.
+        </p>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="register.html" class="btn" style="background: white; color: #1DD1A1; padding: 16px 32px; font-size: 1.1rem;">
+          <i class="fas fa-user-plus"></i> Daftar
+        </a>
+        <a href="login.html" class="btn btn-outline" style="border-color: white; color: white; padding: 16px 32px; font-size: 1.1rem;">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+      </div>
+
+      <!-- Features -->
+      <div style="margin-top: 4rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <div style="text-align: center;">
+          <i class="fas fa-search" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+          <h3 style="margin-bottom: 0.5rem;">Cari Buku</h3>
+          <p style="opacity: 0.9; font-size: 0.95rem;">Temukan buku yang Anda inginkan dengan mudah</p>
+        </div>
+        <div style="text-align: center;">
+          <i class="fas fa-clock" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+          <h3 style="margin-bottom: 0.5rem;">Pinjam 7 Hari</h3>
+          <p style="opacity: 0.9; font-size: 0.95rem;">Masa peminjaman otomatis 7 hari</p>
+        </div>
+        <div style="text-align: center;">
+          <i class="fas fa-bell" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+          <h3 style="margin-bottom: 0.5rem;">Notifikasi</h3>
+          <p style="opacity: 0.9; font-size: 0.95rem;">Pantau status peminjaman Anda</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (isLoggedIn()) {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

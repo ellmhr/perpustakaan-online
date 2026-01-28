@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Diagnostic - Bookridge</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="padding: 2rem;">
+  
+  <div class="container" style="max-width: 800px;">
+    <h1>🔧 Diagnostic Test Page</h1>
+    
+    <div class="card" style="margin-top: 2rem;">
+      <h3>Status Sistem</h3>
+      <div id="diagnosticResults" style="font-family: monospace; white-space: pre-wrap;"></div>
+    </div>
+
+    <div class="card" style="margin-top: 1rem;">
+      <h3>Actions</h3>
+      <button onclick="runTests()" class="btn btn-primary">Run Tests</button>
+      <button onclick="testLogout()" class="btn btn-secondary">Test Logout</button>
+      <button onclick="clearData()" class="btn" style="background: var(--danger); color: white;">Clear All Data</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    function runTests() {
+      const results = [];
+      
+      // Test 1: Check if logged in
+      results.push('=== LOGIN STATUS ===');
+      results.push(`isLoggedIn(): ${isLoggedIn()}`);
+      results.push(`Token exists: ${!!getAuthToken()}`);
+      results.push(`Token value: ${getAuthToken()?.substring(0, 20)}...`);
+      
+      // Test 2: Check user data
+      results.push('\n=== USER DATA ===');
+      const userData = getUserData();
+      results.push(JSON.stringify(userData, null, 2));
+      
+      // Test 3: Check localStorage
+      results.push('\n=== LOCAL STORAGE ===');
+      results.push(`token: ${localStorage.getItem('token')?.substring(0, 20)}...`);
+      results.push(`user: ${localStorage.getItem('user')}`);
+      
+      // Test 4: Check functions
+      results.push('\n=== FUNCTIONS CHECK ===');
+      results.push(`logout function exists: ${typeof logout === 'function'}`);
+      results.push(`getAuthToken exists: ${typeof getAuthToken === 'function'}`);
+      results.push(`getUserData exists: ${typeof getUserData === 'function'}`);
+      results.push(`getAuthHeaders exists: ${typeof getAuthHeaders === 'function'}`);
+      
+      // Test 5: Check API endpoints
+      results.push('\n=== API ENDPOINTS ===');
+      results.push(`BASE_URL: ${API_CONFIG.BASE_URL}`);
+      results.push(`IMAGE_URL: ${API_CONFIG.IMAGE_URL}`);
+      results.push(`AUTH.LOGIN: ${AUTH_ENDPOINTS.LOGIN}`);
+      results.push(`USER.PROFILE: ${USER_ENDPOINTS.PROFILE}`);
+      
+      document.getElementById('diagnosticResults').textContent = results.join('\n');
+    }
+
+    function testLogout() {
+      if (confirm('Test logout? This will log you out.')) {
+        console.log('Calling logout()...');
+        try {
+          logout();
+        } catch (error) {
+          alert('Logout error: ' + error.message);
+          console.error(error);
+        }
+      }
+    }
+
+    function clearData() {
+      if (confirm('Clear all localStorage data?')) {
+        localStorage.clear();
+        alert('Data cleared! Reload page.');
+        window.location.reload();
+      }
+    }
+
+    // Auto-run tests on load
+    runTests();
+  </script>
+
+</body>
+</html>

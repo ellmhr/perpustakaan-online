@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database files
+*.sql.backup
+*.db
+
+# Temporary files
+tmp/
+temp/
+
+# Uploads (keep folder structure, ignore files)
+backend/uploads/covers/*
+!backend/uploads/covers/.gitkeep
+!backend/uploads/covers/README.txt

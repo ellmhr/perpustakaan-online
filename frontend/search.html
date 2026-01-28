@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cari Buku - Bookridge</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <a href="dashboard.html" class="navbar-brand">
+        <i class="fas fa-book-open" style="font-size: 1.5rem; color: var(--primary);"></i>
+        <h2>Bookridge</h2>
+      </a>
+      <ul class="navbar-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="search.html" class="active">Cari Buku</a></li>
+        <li><a href="my-loans.html">Peminjaman</a></li>
+        <li><a href="history.html">Riwayat</a></li>
+        <li><a href="profile.html">Profil</a></li>
+        <li><a href="#" onclick="logout()" style="color: var(--danger);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    
+    <!-- Search Header -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 style="color: var(--text-dark); margin-bottom: 1rem;">
+        <i class="fas fa-search"></i> Cari Buku
+      </h1>
+      
+      <!-- Search Bar -->
+      <div class="search-bar" style="margin: 0 auto;">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput" 
+          placeholder="Cari judul buku, penulis, atau penerbit..."
+        >
+        <button class="search-btn" onclick="searchBooks()">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; justify-content: center;">
+      <button class="btn btn-outline active" onclick="loadBooks('all')" id="btnAll">
+        <i class="fas fa-list"></i> Semua Buku
+      </button>
+      <button class="btn btn-outline" onclick="loadBooks('popular')" id="btnPopular">
+        <i class="fas fa-fire"></i> Populer
+      </button>
+      <button class="btn btn-outline" onclick="loadBooks('latest')" id="btnLatest">
+        <i class="fas fa-clock"></i> Terbaru
+      </button>
+    </div>
+
+    <!-- Books Grid -->
+    <div id="booksContainer" class="book-grid">
+      <!-- Loading -->
+      <div class="loader" style="grid-column: 1 / -1;">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-container">
+      <a href="dashboard.html" class="bottom-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Beranda</span>
+      </a>
+      <a href="search.html" class="bottom-nav-item active">
+        <i class="fas fa-search"></i>
+        <span>Cari</span>
+      </a>
+      <a href="my-loans.html" class="bottom-nav-item">
+        <i class="fas fa-book"></i>
+        <span>Pinjaman</span>
+      </a>
+      <a href="profile.html" class="bottom-nav-item">
+        <i class="fas fa-user"></i>
+        <span>Akun</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/books.js"></script>
+
+</body>
+</html>
